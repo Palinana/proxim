@@ -83,7 +83,8 @@ export default async function SuperAdminStaffingPage({ searchParams }) {
       
     return (
         <div className="h-full bg-gray-50 px-6 md:px-8 py-6">
-            <div className="mx-auto max-w-4xl h-full">
+            {/* <div className="mx-auto max-w-4xl h-full"> */}
+            <div className="mx-auto max-w-[1400px] h-full">
                 <div className="bg-white rounded-2xl shadow-sm h-full flex flex-col">
                     <div className="flex-1 overflow-y-auto px-5 py-5">
                         <StaffingList
