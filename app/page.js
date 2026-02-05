@@ -89,7 +89,7 @@ const Dashboard = async ({ searchParams }) => {
 
     return (
         <div className="flex flex-col h-full">
-            <div className="border-b border-default bg-background px-6 md:px-8 py-5">
+            <div className="border-b border-default bg-background px-4 md:px-6 lg:px-8 py-5">
                 <FilterBar coordinators={coordinatorOptions} role={role} userId={userId}/>
             </div>
 
