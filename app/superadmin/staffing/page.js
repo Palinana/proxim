@@ -55,7 +55,14 @@ export default async function SuperAdminStaffingPage({ searchParams }) {
     }
 
     // ---- data ----
+    // FULL list for options
     const staffingsRaw = await Staffing.find(query)
+        .populate("coordinator", "first_name last_name email phone role")
+        .sort({ createdAt: -1 })
+        .lean();
+
+    // FILTERED list for display 
+    const allStaffingsRaw = await Staffing.find()
         .populate("coordinator", "first_name last_name email phone role")
         .sort({ createdAt: -1 })
         .lean();
@@ -89,6 +96,7 @@ export default async function SuperAdminStaffingPage({ searchParams }) {
                     <div className="flex-1 overflow-y-auto px-5 py-5">
                         <StaffingList
                             staffings={staffings}
+                            allStaffing={normalize(allStaffingsRaw)} 
                             total={staffings.length}
                             admins={coordinators}
                             isSuperadmin={true}

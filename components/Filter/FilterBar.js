@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MultiSelectPopover from "./MultiSelectPopover";
 import OutlineButton from "../Elements/OutlineGreenButton";
 
-export default function FilterBar({ coordinators, role, userId }) {
+export default function FilterBar({ coordinators, role, userId, mandateOptions }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
@@ -70,13 +70,14 @@ export default function FilterBar({ coordinators, role, userId }) {
             {/* Mandate */}
             <MultiSelectPopover
                 label="Mandate"
-                options={[
-                    { label: "2x30", value: "2x30" },
-                    { label: "1x30", value: "1x30" },
-                    { label: "1x60", value: "1x60" },
-                    { label: "5x60", value: "5x60" },
-                    { label: "10x60", value: "10x60" },
-                ]}
+                // options={[
+                //     { label: "2x30", value: "2x30" },
+                //     { label: "1x30", value: "1x30" },
+                //     { label: "1x60", value: "1x60" },
+                //     { label: "5x60", value: "5x60" },
+                //     { label: "10x60", value: "10x60" },
+                // ]}
+                options={mandateOptions}
                 value={(searchParams.get("mandate") || "").split(",").filter(Boolean)}
                 onChange={(vals) => setMultiParam("mandate", vals)}
             />

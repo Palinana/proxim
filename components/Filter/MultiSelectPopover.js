@@ -10,10 +10,18 @@ export default function MultiSelectPopover({ label, options, value = [], onChang
     const [width, setWidth] = useState(0);
 
     const toggle = (val) => {
-      if (value.includes(val)) onChange(value.filter((v) => v !== val));
-      else onChange([...value, val]);
+      const newValues = value.includes(val)
+        ? value.filter((v) => v !== val)
+        : [...value, val];
+    
+      // Sort by options order
+      const sorted = options
+        .map((o) => o.value)
+        .filter((v) => newValues.includes(v));
+    
+      onChange(sorted);
     };
-
+    
     // Capture width of trigger button
     useLayoutEffect(() => {
       if (!triggerRef.current) return;
@@ -24,15 +32,17 @@ export default function MultiSelectPopover({ label, options, value = [], onChang
         <Popover>
             <PopoverTrigger PopoverTrigger asChild>
                 <Button
-                  ref={triggerRef}
-                  variant="outline"
-                  className="w-full sm:w-[130px] bg-white font-normal text-secondary-2 justify-between border border-gray-300"
+                    ref={triggerRef}
+                    variant="outline"
+                    className="w-full sm:w-[130px] bg-white font-normal text-secondary-2 justify-between border border-gray-300"
                 >
-                  {value.length
-                    ? value
-                        .map((id) => options.find((o) => o.value === id)?.label || id)
-                        .join(", ")
-                    : label}
+                  <span className="truncate max-w-[90%]">
+                      {value.length
+                          ? value
+                                .map((id) => options.find((o) => o.value === id)?.label || id)
+                                .join(", ")
+                          : label}
+                  </span>
                 </Button>
             </PopoverTrigger>
 

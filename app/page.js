@@ -77,6 +77,47 @@ const Dashboard = async ({ searchParams }) => {
             }
             : null,
     }));
+
+    // MongoDB query to get unique mandate options
+    const mandateOptions = await Staffing.aggregate([
+        {
+            $match: {
+                "workload.visits": { $exists: true },
+                "workload.duration": { $exists: true },
+            },
+        },
+        {
+            $group: {
+                _id: {
+                    visits: "$workload.visits",
+                    duration: "$workload.duration",
+                },
+            },
+        },
+        {
+            $project: {
+                _id: 0,
+                value: {
+                $concat: [
+                    { $toString: "$_id.visits" },
+                    "x",
+                    { $toString: "$_id.duration" },
+                ],
+                },
+                label: {
+                $concat: [
+                    { $toString: "$_id.visits" },
+                    "x",
+                    { $toString: "$_id.duration" },
+                ],
+                },
+            },
+        },
+        { 
+            $sort: 
+                { " _id.visits": 1, " _id.duration": 1 } 
+        },
+    ]);
         
     const coordinators = await User.find({ role: "admin" })
         .select("first_name last_name _id")
@@ -90,7 +131,7 @@ const Dashboard = async ({ searchParams }) => {
     return (
         <div className="flex flex-col h-full">
             <div className="border-b border-default bg-background px-4 md:px-6 lg:px-8 py-5">
-                <FilterBar coordinators={coordinatorOptions} role={role} userId={userId}/>
+                <FilterBar coordinators={coordinatorOptions} role={role} userId={userId} mandateOptions={mandateOptions}/>
             </div>
 
             <DashboardClient staffings={staffings} />

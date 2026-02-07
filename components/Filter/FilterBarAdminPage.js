@@ -32,11 +32,24 @@ export default function FilterBarAdminPage({ staffings = [], allStaffing = [], s
     /* =========================
        DATA
     ========================== */
-    const eiList = allStaffing?.length ? allStaffing : staffings;
+    const eiList = allStaffing || staffings;
+
     const uniqueEIs = Array.from(
         new Set((eiList || []).map((s) => s.caseId).filter(Boolean))
     );
 
+    const mandateOptions = Array.from(
+        new Set(
+          (allStaffing || staffings)
+            .map((s) => s.workload)
+            .filter(Boolean)
+            .map((w) => `${w.visits}x${w.duration}`)
+        )
+      )
+        .sort()
+        .map((m) => ({ label: m, value: m }));
+      
+      
     const handleClear = () => {
         router.push(pathname);
         setOpen(false);
@@ -83,13 +96,7 @@ export default function FilterBarAdminPage({ staffings = [], allStaffing = [], s
             {/* Mandate */}
             <MultiSelectPopover
                 label="Mandate"
-                options={[
-                    { label: "2x30", value: "2x30" },
-                    { label: "1x30", value: "1x30" },
-                    { label: "1x60", value: "1x60" },
-                    { label: "5x60", value: "5x60" },
-                    { label: "10x60", value: "10x60" },
-                ]}
+                options={mandateOptions}
                 value={(searchParams.get("mandate") || "")
                     .split(",")
                     .filter(Boolean)}
