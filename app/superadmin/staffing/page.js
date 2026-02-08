@@ -17,15 +17,7 @@ export default async function SuperAdminStaffingPage({ searchParams }) {
     if (!session || session.user.role !== "superadmin") return null;
 
     // ---- filters from URL ----
-    const {
-        service,
-        age,
-        borough,
-        zip,
-        mandate,
-        ei,
-        coordinator,
-    } = params || {};
+    const { service, age, borough,  zip, mandate, ei, coordinator } = params || {};
 
     const query = {};
 
@@ -46,11 +38,11 @@ export default async function SuperAdminStaffingPage({ searchParams }) {
     if (mandate) {
         const mandates = mandate.split(",");
         query.$or = mandates.map((m) => {
-        const [visits, duration] = m.split("x").map(Number);
-        return {
-            "workload.visits": visits,
-            "workload.duration": duration,
-        };
+            const [visits, duration] = m.split("x").map(Number);
+            return {
+                "workload.visits": visits,
+                "workload.duration": duration,
+            };
         });
     }
 

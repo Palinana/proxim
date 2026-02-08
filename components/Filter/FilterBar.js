@@ -70,13 +70,6 @@ export default function FilterBar({ coordinators, role, userId, mandateOptions }
             {/* Mandate */}
             <MultiSelectPopover
                 label="Mandate"
-                // options={[
-                //     { label: "2x30", value: "2x30" },
-                //     { label: "1x30", value: "1x30" },
-                //     { label: "1x60", value: "1x60" },
-                //     { label: "5x60", value: "5x60" },
-                //     { label: "10x60", value: "10x60" },
-                // ]}
                 options={mandateOptions}
                 value={(searchParams.get("mandate") || "").split(",").filter(Boolean)}
                 onChange={(vals) => setMultiParam("mandate", vals)}

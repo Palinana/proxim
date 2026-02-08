@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import StaffingMap from "../Map/StaffingMap";
-import StaffingPanel from "../Staffing/StaffingPanel";
+import DashboardStaffingMap from "../Map/DashboardStaffingMap";
+import DashboardStaffingPanel from "../Staffing/DashboardStaffingPanel";
 import MobileStaffingToggle from "@/components/Staffing/MobileStaffingToggle";
 
 export default function DashboardClient({ staffings }) {
@@ -18,7 +18,7 @@ export default function DashboardClient({ staffings }) {
         <div className="flex flex-1 h-full overflow-hidden bg-card">
             {/* Desktop sidebar */}
             <aside className="hidden md:block w-[420px] lg:w-[480px] border-r border-default overflow-y-auto">
-                <StaffingPanel
+                <DashboardStaffingPanel
                     staffings={staffings}
                     selectedStaffingId={selectedStaffingId}
                     onSelectStaffing={setSelectedStaffingId}
@@ -27,14 +27,14 @@ export default function DashboardClient({ staffings }) {
     
             {/* Map */}
             <section className="flex-1 relative pb-16 md:pb-0">
-                <StaffingMap
+                <DashboardStaffingMap
                     staffings={staffings}
                     selectedStaffingId={selectedStaffingId}
                     onSelectStaffing={setSelectedStaffingId}
                 />
 
                 <MobileStaffingToggle open={open} setOpen={setOpen}>
-                    <StaffingPanel
+                    <DashboardStaffingPanel
                         staffings={staffings}
                         selectedStaffingId={selectedStaffingId}
                         onSelectStaffing={setSelectedStaffingId}

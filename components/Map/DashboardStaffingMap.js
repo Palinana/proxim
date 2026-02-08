@@ -201,8 +201,6 @@ export default function StaffingMap({ staffings, selectedStaffingId, onSelectSta
                 // }}
                 style={{ width: "100%", height: "100%" }}
                 mapStyle="mapbox://styles/mapbox/light-v10"
-                // mapStyle="mapbox://styles/palina/cml19ex6e00ha01qreais9dqn"
-
                 mapboxAccessToken={token}
                 interactiveLayerIds={["circle"]}
                 onMouseMove={(e) => {
@@ -276,5 +274,3 @@ export default function StaffingMap({ staffings, selectedStaffingId, onSelectSta
         </div>
     );
 }
-
-

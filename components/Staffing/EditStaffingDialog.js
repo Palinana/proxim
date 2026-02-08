@@ -15,32 +15,32 @@ export default function EditStaffingDialog({ staffing, admins, isSuperadmin }) {
   return (
       <>
           <button onClick={() => setOpen(true)}>
-            <HiOutlinePencil />
+              <HiOutlinePencil />
           </button>
     
           <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="bg-white shadow-lg rounded-2xl max-w-lg">
-              <DialogHeader>
-                <DialogTitle>Edit Staffing</DialogTitle>
-              </DialogHeader>
-    
-              <form
-                action={(formData) => {
-                  startTransition(async () => {
-                    await updateStaffing(staffing._id, formData);
-                    router.refresh();
-                    setOpen(false);
-                  });
-                }}
-              >
-                <StaffingForm
-                  staffing={staffing}
-                  admins={admins}
-                  isSuperadmin={isSuperadmin}
-                  isPending={isPending}
-                />
-              </form>
-            </DialogContent>
+              <DialogContent className="bg-white shadow-lg rounded-2xl max-w-lg">
+                  <DialogHeader>
+                      <DialogTitle>Edit Staffing</DialogTitle>
+                  </DialogHeader>
+        
+                <form
+                    action={(formData) => {
+                        startTransition(async () => {
+                            await updateStaffing(staffing._id, formData);
+                            router.refresh();
+                            setOpen(false);
+                        });
+                    }}
+                >
+                    <StaffingForm
+                        staffing={staffing}
+                        admins={admins}
+                        isSuperadmin={isSuperadmin}
+                        isPending={isPending}
+                    />
+                </form>
+              </DialogContent>
           </Dialog>
       </>
     );

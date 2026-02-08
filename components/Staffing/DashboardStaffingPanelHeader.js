@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function StaffingPanelHeader({ total }) {
+export default function DashboardStaffingPanelHeader({ total }) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -30,7 +30,7 @@ export default function StaffingPanelHeader({ total }) {
             <div className="text-sm text-primary text-primary-hover font-semibold">Total Staffing: {total}</div>
 
             <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500">Newest</span>
+                <span className="text-xs text-gray-500">Oldest</span>
 
                 <button
                     onClick={toggleSort}
@@ -47,7 +47,7 @@ export default function StaffingPanelHeader({ total }) {
                 />
                 </button>
 
-                <span className="text-xs text-gray-500">Oldest</span>
+                <span className="text-xs text-gray-500">Newest</span>
             </div>
         </div>
     );

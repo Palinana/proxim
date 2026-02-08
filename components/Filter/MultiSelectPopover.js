@@ -10,22 +10,22 @@ export default function MultiSelectPopover({ label, options, value = [], onChang
     const [width, setWidth] = useState(0);
 
     const toggle = (val) => {
-      const newValues = value.includes(val)
-        ? value.filter((v) => v !== val)
-        : [...value, val];
-    
-      // Sort by options order
-      const sorted = options
-        .map((o) => o.value)
-        .filter((v) => newValues.includes(v));
-    
-      onChange(sorted);
-    };
+        const newValues = value.includes(val)
+            ? value.filter((v) => v !== val)
+            : [...value, val];
+      
+        // Sort by options order
+        const sorted = options
+            .map((o) => o.value)
+            .filter((v) => newValues.includes(v));
+      
+        onChange(sorted);
+      };
     
     // Capture width of trigger button
     useLayoutEffect(() => {
-      if (!triggerRef.current) return;
-      setWidth(triggerRef.current.offsetWidth);
+        if (!triggerRef.current) return;
+        setWidth(triggerRef.current.offsetWidth);
     }, []);
 
     return (

@@ -3,12 +3,8 @@ import Staffing from "@/models/Staffing";
 import User from "@/models/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
-
 import DashboardClient from "../components/Dashboard/DashboardClient";
-import StaffingMap from "../components/Map/StaffingMap";
 import FilterBar from "../components/Filter/FilterBar";
-import StaffingPanel from "../components/Staffing/StaffingPanel";
-import MobileStaffingToggle from "@/components/Staffing/MobileStaffingToggle";
 
 const Dashboard = async ({ searchParams }) => {
     await connectDB();
@@ -49,11 +45,11 @@ const Dashboard = async ({ searchParams }) => {
     if (params?.mandate) {
         const mandates = params.mandate.split(",");
         const mandateQueries = mandates.map((m) => {
-        const [visits, duration] = m.split("x").map(Number);
-        return {
-            "workload.visits": visits,
-            "workload.duration": duration,
-        };
+            const [visits, duration] = m.split("x").map(Number);
+            return {
+                "workload.visits": visits,
+                "workload.duration": duration,
+            };
         });
         query.$or = mandateQueries;
     }

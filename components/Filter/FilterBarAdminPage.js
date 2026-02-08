@@ -12,9 +12,7 @@ export default function FilterBarAdminPage({ staffings = [], allStaffing = [], s
     const pathname = usePathname();
     const [open, setOpen] = useState(false);
 
-    /* =========================
-       URL PARAM HELPERS
-    ========================== */
+    // URL PARAM HELPERS
     const setParam = (key, value) => {
         const params = new URLSearchParams(searchParams);
         if (!value) params.delete(key);
@@ -29,9 +27,7 @@ export default function FilterBarAdminPage({ staffings = [], allStaffing = [], s
         router.push(`${pathname}?${params.toString()}`);
     };
 
-    /* =========================
-       DATA
-    ========================== */
+    //DATA
     const eiList = allStaffing || staffings;
 
     const uniqueEIs = Array.from(
@@ -40,24 +36,20 @@ export default function FilterBarAdminPage({ staffings = [], allStaffing = [], s
 
     const mandateOptions = Array.from(
         new Set(
-          (allStaffing || staffings)
-            .map((s) => s.workload)
-            .filter(Boolean)
-            .map((w) => `${w.visits}x${w.duration}`)
+            (allStaffing || staffings)
+                .map((s) => s.workload)
+                .filter(Boolean)
+                .map((w) => `${w.visits}x${w.duration}`)
         )
-      )
+    )
         .sort()
         .map((m) => ({ label: m, value: m }));
-      
       
     const handleClear = () => {
         router.push(pathname);
         setOpen(false);
     };
 
-    /* =========================
-       FILTER JSX (NOT A COMPONENT)
-    ========================== */
     const renderFilters = () => (
         <>
             {/* EI # */}
@@ -156,9 +148,7 @@ export default function FilterBarAdminPage({ staffings = [], allStaffing = [], s
 
     return (
         <>
-            {/* =========================
-               DESKTOP FILTER BAR
-            ========================== */}
+            {/* DESKTOP FILTER BAR */}
             <div className="hidden sm:block border border-gray-200 bg-staffing-card rounded-xl p-4">
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex flex-wrap items-center gap-2">
@@ -174,9 +164,7 @@ export default function FilterBarAdminPage({ staffings = [], allStaffing = [], s
                 </div>
             </div>
 
-            {/* =========================
-               MOBILE FILTER BUTTON
-            ========================== */}
+            {/* MOBILE FILTER BUTTON */}
             <div className="sm:hidden flex items-center w-full justify-between">
                 {/* Left side: Filters button */}
                 <button
@@ -196,9 +184,7 @@ export default function FilterBarAdminPage({ staffings = [], allStaffing = [], s
                 </button>
             </div>
             
-            {/* =========================
-               MOBILE FILTER PANEL
-            ========================== */}
+            {/* MOBILE FILTER PANEL */}
             {open && (
                 <div className="fixed inset-0 z-50">
                     {/* Backdrop */}
