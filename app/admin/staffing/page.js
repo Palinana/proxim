@@ -62,7 +62,9 @@ export default async function AdminStaffingPage({ searchParams }) {
         .sort({ createdAt: -1 })
         .lean();
       
-    const allStaffingsRaw = await Staffing.find({ coordinator: userId }).lean();
+    const allStaffingsRaw = await Staffing.find({ coordinator: userId })
+        .populate("coordinator", "first_name last_name email phone role")
+        .lean();
     const plainStaffings = JSON.parse(JSON.stringify(normalize(staffings)));
     const allStaffings = JSON.parse(JSON.stringify(normalize(allStaffingsRaw)));
 

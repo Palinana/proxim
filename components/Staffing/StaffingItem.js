@@ -48,9 +48,7 @@ export default function StaffingItem({ staffing, admins, isSuperadmin }) {
             </CardHeader>
 
             <CardContent className="pt-0 pb-3 px-4 space-y-1 text-sm">
-                {/* <div>
-                    <strong>Status:</strong> {status}
-                </div> */}
+
                 <div>
                     <strong>Service:</strong> {serviceType}
                 </div>
@@ -74,12 +72,8 @@ export default function StaffingItem({ staffing, admins, isSuperadmin }) {
                             <strong>Coordinator:</strong>{" "}
                             {coordinator.first_name} {coordinator.last_name}
                         </div>
-                        <div>
-                            {coordinator.email} • {coordinator.phone || "No phone"}
-                        </div>
                     </div>
                 )}
-
             </CardContent>
         </Card>
     );

@@ -17,15 +17,7 @@ export default async function SuperAdminStaffingPage({ searchParams }) {
     if (!session || session.user.role !== "superadmin") return null;
 
     // ---- filters from URL ----
-    const {
-        service,
-        age,
-        borough,
-        zip,
-        mandate,
-        ei,
-        coordinator,
-    } = params || {};
+    const { service, age, borough,  zip, mandate, ei, coordinator } = params || {};
 
     const query = {};
 
@@ -46,16 +38,23 @@ export default async function SuperAdminStaffingPage({ searchParams }) {
     if (mandate) {
         const mandates = mandate.split(",");
         query.$or = mandates.map((m) => {
-        const [visits, duration] = m.split("x").map(Number);
-        return {
-            "workload.visits": visits,
-            "workload.duration": duration,
-        };
+            const [visits, duration] = m.split("x").map(Number);
+            return {
+                "workload.visits": visits,
+                "workload.duration": duration,
+            };
         });
     }
 
     // ---- data ----
+    // FULL list for options
     const staffingsRaw = await Staffing.find(query)
+        .populate("coordinator", "first_name last_name email phone role")
+        .sort({ createdAt: -1 })
+        .lean();
+
+    // FILTERED list for display 
+    const allStaffingsRaw = await Staffing.find()
         .populate("coordinator", "first_name last_name email phone role")
         .sort({ createdAt: -1 })
         .lean();
@@ -83,11 +82,13 @@ export default async function SuperAdminStaffingPage({ searchParams }) {
       
     return (
         <div className="h-full bg-gray-50 px-6 md:px-8 py-6">
-            <div className="mx-auto max-w-4xl h-full">
+            {/* <div className="mx-auto max-w-4xl h-full"> */}
+            <div className="mx-auto max-w-[1400px] h-full">
                 <div className="bg-white rounded-2xl shadow-sm h-full flex flex-col">
                     <div className="flex-1 overflow-y-auto px-5 py-5">
                         <StaffingList
                             staffings={staffings}
+                            allStaffing={normalize(allStaffingsRaw)} 
                             total={staffings.length}
                             admins={coordinators}
                             isSuperadmin={true}

@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import Map, { Source, Layer, Popup, NavigationControl } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 export default function StaffingMap({ staffings, selectedStaffingId, onSelectStaffing }) {
     const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
     const [hoverInfo, setHoverInfo] = useState(null);
+    const mapRef = useRef(null);
 
     // Build grouped features
     const features = useMemo(() => {
@@ -45,6 +46,41 @@ export default function StaffingMap({ staffings, selectedStaffingId, onSelectSta
             },
         }));
     }, [staffings]);
+
+    // smaller screens
+    const getBoundsPadding = () => {
+        const w = window.innerWidth;
+      
+        // phones
+        if (w < 640) {
+            return { top: 60, bottom: 120, left: 30, right: 30 };
+        }
+      
+        // tablets
+        if (w < 1024) {
+            return { top: 60, bottom: 80, left: 50, right: 50 };
+        }
+      
+        // desktop
+        return { top: 60, bottom: 60, left: 60, right: 60 };
+    };  
+
+    // Fit bounds once when features change
+    const bounds = useMemo(() => {
+            if (!features.length) return null;
+        
+            let minLng = Infinity, minLat = Infinity, maxLng = -Infinity, maxLat = -Infinity;
+        
+            features.forEach(f => {
+            const [lng, lat] = f.geometry.coordinates;
+            minLng = Math.min(minLng, lng);
+            minLat = Math.min(minLat, lat);
+            maxLng = Math.max(maxLng, lng);
+            maxLat = Math.max(maxLat, lat);
+            });
+        
+            return [[minLng, minLat], [maxLng, maxLat]];
+    }, [features]);
 
     // Find the group containing the selected staffing
     const selectedGroupId = useMemo(() => {
@@ -139,14 +175,32 @@ export default function StaffingMap({ staffings, selectedStaffingId, onSelectSta
         <div className="w-full h-full min-h-0">
             <Map
                 initialViewState={{
-                    longitude: features[0].geometry.coordinates[0],
-                    latitude: features[0].geometry.coordinates[1],
+                    longitude: -74.087,
+                    latitude: 40.5795,
                     zoom: 11,
                 }}
+                onLoad={(e) => {
+                    const map = e.target;
+
+                    // water color
+                    map.setPaintProperty("water", "fill-color", "#c7dee8");
+
+                    // fit bounds
+                    if (bounds) {
+                    map.fitBounds(bounds, {
+                        padding: getBoundsPadding(),
+                        maxZoom: 14,
+                        duration: 800,
+                    });
+                    }
+                }}
+                // initialViewState={{
+                //     longitude: features[0].geometry.coordinates[0],
+                //     latitude: features[0].geometry.coordinates[1],
+                //     zoom: 11,
+                // }}
                 style={{ width: "100%", height: "100%" }}
                 mapStyle="mapbox://styles/mapbox/light-v10"
-                // mapStyle="mapbox://styles/palina/cml19ex6e00ha01qreais9dqn"
-
                 mapboxAccessToken={token}
                 interactiveLayerIds={["circle"]}
                 onMouseMove={(e) => {
@@ -186,11 +240,6 @@ export default function StaffingMap({ staffings, selectedStaffingId, onSelectSta
                 
                     onSelectStaffing(selectedStaffingId === id ? null : id);
                 }}
-                // custom water color 
-                onLoad={(e) => {
-                    const map = e.target;
-                    map.setPaintProperty("water", "fill-color", "#c7dee8");
-                }}
             >
                 <NavigationControl position="bottom-right" />
                 
@@ -225,5 +274,3 @@ export default function StaffingMap({ staffings, selectedStaffingId, onSelectSta
         </div>
     );
 }
-
-

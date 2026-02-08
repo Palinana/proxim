@@ -1,14 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MultiSelectPopover from "./MultiSelectPopover";
+import { HiOutlineAdjustments, HiOutlineX } from "react-icons/hi";
 
 export default function FilterBarAdminPage({ staffings = [], allStaffing = [], showCoordinator = false, coordinators = [] }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
+    const [open, setOpen] = useState(false);
 
+    // URL PARAM HELPERS
     const setParam = (key, value) => {
         const params = new URLSearchParams(searchParams);
         if (!value) params.delete(key);
@@ -23,141 +27,211 @@ export default function FilterBarAdminPage({ staffings = [], allStaffing = [], s
         router.push(`${pathname}?${params.toString()}`);
     };
 
-    // const caseIds = [...new Set(allStaffing.map((s) => s.caseId).filter(Boolean))];
+    //DATA
+    const eiList = allStaffing || staffings;
 
-    // ----------------------------
-    // EI List (fallback to staffings)
-    // ----------------------------
-    const eiList = (allStaffing?.length ? allStaffing : staffings) || [];
-    const uniqueEIs = Array.from(new Set(eiList.map((s) => s.caseId)));
+    const uniqueEIs = Array.from(
+        new Set((eiList || []).map((s) => s.caseId).filter(Boolean))
+    );
 
+    const mandateOptions = Array.from(
+        new Set(
+            (allStaffing || staffings)
+                .map((s) => s.workload)
+                .filter(Boolean)
+                .map((w) => `${w.visits}x${w.duration}`)
+        )
+    )
+        .sort()
+        .map((m) => ({ label: m, value: m }));
+      
     const handleClear = () => {
         router.push(pathname);
+        setOpen(false);
     };
-  
-    return (
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex flex-col gap-2">
-              <div className="flex gap-2 items-center flex-wrap">
-                {/* EI # */}
-                <Select
-                  value={searchParams.get("ei") || ""}
-                  onValueChange={(v) => setParam("ei", v)}
-                >
-                  <SelectTrigger className="w-[130px] shrink-0 bg-white text-secondary-2 border border-gray-300">
+
+    const renderFilters = () => (
+        <>
+            {/* EI # */}
+            <Select
+                value={searchParams.get("ei") || ""}
+                onValueChange={(v) => setParam("ei", v)}
+            >
+                <SelectTrigger className="h-10 w-full sm:w-[130px] bg-white text-secondary-2 border border-gray-300 rounded-lg">
                     <SelectValue placeholder="EI #" />
-                  </SelectTrigger>
-
-                  <SelectContent className="bg-white border border-gray-200">
+                </SelectTrigger>
+                <SelectContent className="bg-white border border-gray-200">
                     {uniqueEIs.map((ei) => (
-                      <SelectItem key={ei} value={ei}>
-                        {ei}
-                      </SelectItem>
+                        <SelectItem key={ei} value={ei}>
+                            {ei}
+                        </SelectItem>
                     ))}
-                  </SelectContent>
-                </Select>
+                </SelectContent>
+            </Select>
 
-                {/* Service */}
-                <Select
-                  value={searchParams.get("service") || ""}
-                  onValueChange={(v) => setParam("service", v)}
-                >
-                  <SelectTrigger className="w-[130px] shrink-0 bg-white text-secondary-2 border border-gray-300">
+            {/* Service */}
+            <Select
+                value={searchParams.get("service") || ""}
+                onValueChange={(v) => setParam("service", v)}
+            >
+                <SelectTrigger className="h-10 w-full sm:w-[130px] bg-white text-secondary-2 border border-gray-300 rounded-lg">
                     <SelectValue placeholder="Service" />
-                  </SelectTrigger>
-
-                  <SelectContent className="bg-white border border-gray-200">
+                </SelectTrigger>
+                <SelectContent className="bg-white border border-gray-200">
                     <SelectItem value="ST">ST</SelectItem>
                     <SelectItem value="OT">OT</SelectItem>
                     <SelectItem value="PT">PT</SelectItem>
                     <SelectItem value="ABA">ABA</SelectItem>
-                  </SelectContent>
-                </Select>
+                </SelectContent>
+            </Select>
 
-                {/* Status */}
-                {/* <Select
-                  value={searchParams.get("status") || ""}
-                  onValueChange={(v) => setParam("status", v)}
-                >
-                  <SelectTrigger className="w-[130px] bg-white text-secondary-2 border border-gray-300">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
+            {/* Mandate */}
+            <MultiSelectPopover
+                label="Mandate"
+                options={mandateOptions}
+                value={(searchParams.get("mandate") || "")
+                    .split(",")
+                    .filter(Boolean)}
+                onChange={(vals) => setMultiParam("mandate", vals)}
+            />
 
-                  <SelectContent className="bg-white border border-gray-200">
-                    <SelectItem value="Open">Open</SelectItem>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                    <SelectItem value="Filled">Filled</SelectItem>
-                    <SelectItem value="Closed">Closed</SelectItem>
-                  </SelectContent>
-                </Select> */}
+            {/* Borough */}
+            <Select
+                value={searchParams.get("borough") || ""}
+                onValueChange={(v) => setParam("borough", v)}
+            >
+                <SelectTrigger className="h-10 w-full sm:w-[130px] bg-white text-secondary-2 border border-gray-300 rounded-lg">
+                    <SelectValue placeholder="Borough" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border border-gray-200">
+                    <SelectItem value="Brooklyn">Brooklyn</SelectItem>
+                    <SelectItem value="Staten Island">Staten Island</SelectItem>
+                </SelectContent>
+            </Select>
 
-                {/* Mandate */}
+            {/* ZIP */}
+            <MultiSelectPopover
+                label="ZIP"
+                options={[
+                    { label: "10301", value: "10301" },
+                    { label: "10302", value: "10302" },
+                    { label: "10303", value: "10303" },
+                    { label: "10305", value: "10305" },
+                    { label: "10306", value: "10306" },
+                    { label: "10307", value: "10307" },
+                    { label: "10308", value: "10308" },
+                    { label: "10309", value: "10309" },
+                    { label: "10310", value: "10310" },
+                    { label: "10312", value: "10312" },
+                ]}
+                value={(searchParams.get("zip") || "")
+                    .split(",")
+                    .filter(Boolean)}
+                onChange={(vals) => setMultiParam("zip", vals)}
+            />
+
+            {/* Coordinator */}
+            {showCoordinator && (
                 <MultiSelectPopover
-                    label="Mandate"
-                    options={[
-                      { label: "2x30", value: "2x30" },
-                      { label: "1x30", value: "1x30" },
-                      { label: "1x60", value: "1x60" },
-                      { label: "5x60", value: "5x60" },
-                      { label: "10x60", value: "10x60" },
-                    ]}
-                    value={(searchParams.get("mandate") || "").split(",").filter(Boolean)}
-                    onChange={(vals) => setMultiParam("mandate", vals)}
-                  />
-              </div>
-              <div className="flex gap-2 items-center flex-wrap">
-                  {/* Borough */}
-                  <Select
-                    value={searchParams.get("borough") || ""}
-                    onValueChange={(v) => setParam("borough", v)}
-                  >
-                    <SelectTrigger className="bg-white text-secondary-2 w-[130px] shrink-0 border border-gray-300">
-                      <SelectValue placeholder="Borough" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border border-gray-200">
-                      <SelectItem value="Brooklyn">Brooklyn</SelectItem>
-                      <SelectItem value="Staten Island">Staten Island</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    label="Coordinator"
+                    options={coordinators}
+                    value={(searchParams.get("coordinator") || "")
+                        .split(",")
+                        .filter(Boolean)}
+                    onChange={(vals) =>
+                        setMultiParam("coordinator", vals)
+                    }
+                />
+            )}
+        </>
+    );
 
-                  {/* ZIP */}
-                  <MultiSelectPopover
-                    label="ZIP"
-                    options={[
-                      { label: "10301", value: "10301" },
-                      { label: "10302", value: "10302" },
-                      { label: "10303", value: "10303" },
-                      { label: "10305", value: "10305" },
-                      { label: "10306", value: "10306" },
-                      { label: "10307", value: "10307" },
-                      { label: "10308", value: "10308" },
-                      { label: "10309", value: "10309" },
-                      { label: "10310", value: "10310" },
-                      { label: "10312", value: "10312" },
-                    ]}
-                    value={(searchParams.get("zip") || "").split(",").filter(Boolean)}
-                    onChange={(vals) => setMultiParam("zip", vals)}
-                  />
+    return (
+        <>
+            {/* DESKTOP FILTER BAR */}
+            <div className="hidden sm:block border border-gray-200 bg-staffing-card rounded-xl p-4">
+                <div className="flex items-center justify-between gap-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                        {renderFilters()}
+                    </div>
 
-                  {/* Coordinator (only for superadmin) */}
-                  {showCoordinator && (
-                      <MultiSelectPopover
-                        label="Coordinator"
-                        options={coordinators}
-                        value={(searchParams.get("coordinator") || "").split(",").filter(Boolean)}
-                        onChange={(vals) => setMultiParam("coordinator", vals)}
-                      />
-                  )}
-              </div>
-          </div>
+                    <button
+                        onClick={handleClear}
+                        className="text-sm font-semibold text-secondary-2 hover:underline whitespace-nowrap"
+                    >
+                        Clear filters
+                    </button>
+                </div>
+            </div>
 
-          <button
-            onClick={handleClear}
-            className="text-sm text-secondary-2 hover:underline !font-bold"
-          >
-              Clear filters
-          </button>
-      </div>
+            {/* MOBILE FILTER BUTTON */}
+            <div className="sm:hidden flex items-center w-full justify-between">
+                {/* Left side: Filters button */}
+                <button
+                    onClick={() => setOpen(true)}
+                    className="w-[140px] flex items-center justify-center gap-2 h-10 bg-white border border-gray-300 rounded-lg text-secondary-2"
+                >
+                    <HiOutlineAdjustments />
+                    Filters
+                </button>
+
+                {/* Right side: Clear text */}
+                <button
+                    onClick={handleClear}
+                    className="text-sm text-secondary-2 hover:underline !font-bold"
+                >
+                    Clear Filters
+                </button>
+            </div>
+            
+            {/* MOBILE FILTER PANEL */}
+            {open && (
+                <div className="fixed inset-0 z-50">
+                    {/* Backdrop */}
+                    <div
+                        className="absolute inset-0 bg-black/40"
+                        onClick={() => setOpen(false)}
+                    />
+
+                    {/* Panel */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-4 max-h-[85vh] overflow-y-auto">
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="text-lg font-semibold">
+                                Filters
+                            </div>
+                            <button
+                                onClick={() => setOpen(false)}
+                                className="text-gray-500"
+                            >
+                                <HiOutlineX size={20} />
+                            </button>
+                        </div>
+
+                        {/* Filters (FULL WIDTH ON MOBILE) */}
+                        <div className="flex flex-col gap-3">
+                            {renderFilters()}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="mt-6 flex gap-3">
+                            <button
+                                onClick={handleClear}
+                                className="flex-1 border border-gray-300 rounded-lg py-2 font-medium"
+                            >
+                                Clear
+                            </button>
+                            <button
+                                onClick={() => setOpen(false)}
+                                className="flex-1 bg-primary text-white rounded-lg py-2 font-medium"
+                            >
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
 

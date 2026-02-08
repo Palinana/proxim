@@ -20,7 +20,9 @@ export default function AddStaffingDialog({ admins = [], isSuperadmin = false })
         //   status: "",
         age: "",
         caseId: "",
-        location: { city: "", state: "", zipcode: "" },
+
+        // prefilling state and city
+        location: { city: "Staten Island", state: "NY", zipcode: "" },
         workload: { visits: "", duration: "", frequency: "Weekly" },
         preferredSchedule: [],
     };
