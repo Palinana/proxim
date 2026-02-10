@@ -74,7 +74,7 @@ const Navbar = () => {
                             key={index}
                             className="hidden md:inline px-3 py-1 rounded btn-primary"
                         >
-                            Sign In
+                            {/* Sign In */} Admin Login
                         </button>
                     ))
                 )}
@@ -129,10 +129,11 @@ const Navbar = () => {
                                     key={index}
                                     className='px-3 py-1 rounded btn-primary text-white hover:bg-blue-700'
                                 >
-                                    Sign In
+                                    {/* Sign In */}Admin Login
                                 </button>
                             ))
                         )}
+
                         {session && (
                             <button
                                 className="px-3 py-1 rounded border hover:bg-gray-100"
