@@ -104,6 +104,7 @@ export default function StaffingForm({ staffing, admins, isSuperadmin, isPending
                     <SelectItem value="Staten Island">Staten Island</SelectItem>
                 </SelectContent>
             </Select>
+            <input type="hidden" name="city" value={city} />
 
             {/* State fixed */}
             <Input name="state" value={state} readOnly />

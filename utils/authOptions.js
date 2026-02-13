@@ -50,7 +50,6 @@ export const authOptions = {
             await connectDB();
 
             const user = await User.findOne({ email: token.email });
-            console.log("JWT user:", user);
 
             if (user) {
                 token.id = user._id.toString();

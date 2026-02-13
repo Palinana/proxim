@@ -114,7 +114,30 @@ const Dashboard = async ({ searchParams }) => {
                 { " _id.visits": 1, " _id.duration": 1 } 
         },
     ]);
-        
+
+    const zipOptions = await Staffing.aggregate([
+        {
+          $match: {
+            "location.zipcode": { $exists: true, $ne: null }
+          }
+        },
+        {
+          $group: {
+            _id: "$location.zipcode"
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            label: "$_id",
+            value: "$_id"
+          }
+        },
+        {
+          $sort: { value: 1 }
+        }
+    ]);      
+       
     const coordinators = await User.find({ role: "admin" })
         .select("first_name last_name _id")
         .lean();
@@ -127,10 +150,10 @@ const Dashboard = async ({ searchParams }) => {
     return (
         <div className="flex flex-col h-full">
             <div className="border-b border-default bg-background px-4 md:px-6 lg:px-8 py-5">
-                <FilterBar coordinators={coordinatorOptions} role={role} userId={userId} mandateOptions={mandateOptions}/>
+                <FilterBar coordinators={coordinatorOptions} role={role} userId={userId} mandateOptions={mandateOptions} zipOptions={zipOptions}/>
             </div>
 
-            <DashboardClient staffings={staffings} />
+            <DashboardClient staffings={staffings} role={role}/>
         </div>
     );
 };
