@@ -121,18 +121,6 @@ export default function FilterBarAdminPage({ staffings = [], allStaffing = [], s
             {/* ZIP */}
             <MultiSelectPopover
                 label="ZIP"
-                // options={[
-                //     { label: "10301", value: "10301" },
-                //     { label: "10302", value: "10302" },
-                //     { label: "10303", value: "10303" },
-                //     { label: "10305", value: "10305" },
-                //     { label: "10306", value: "10306" },
-                //     { label: "10307", value: "10307" },
-                //     { label: "10308", value: "10308" },
-                //     { label: "10309", value: "10309" },
-                //     { label: "10310", value: "10310" },
-                //     { label: "10312", value: "10312" },
-                // ]}
                 options={uniqueZips.map((item) => ({ label: item, value: item }))}
                 value={(searchParams.get("zip") || "")
                     .split(",")

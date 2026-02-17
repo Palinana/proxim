@@ -27,7 +27,7 @@ export default function StaffingCard({ staffing, role, isSelected, onSelect }) {
     const coordName = coordinator
         ? `${coordinator.first_name} ${coordinator.last_name}`
         : "Unknown";
-    
+
     // Auto-scroll when selected
     useEffect(() => {
         if (isSelected) {
