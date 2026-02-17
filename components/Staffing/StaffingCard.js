@@ -14,8 +14,9 @@ function getServiceColor(type) {
     }
 }
 
-export default function StaffingCard({ staffing, isSelected, onSelect }) {
+export default function StaffingCard({ staffing, role, isSelected, onSelect }) {
     const ref = useRef(null);
+    const isAdmin = role === "admin";
 
     const { serviceType, ageRange, workload, location, preferredSchedule, caseId, coordinator } = staffing;
 
@@ -26,7 +27,7 @@ export default function StaffingCard({ staffing, isSelected, onSelect }) {
     const coordName = coordinator
         ? `${coordinator.first_name} ${coordinator.last_name}`
         : "Unknown";
-    
+
     // Auto-scroll when selected
     useEffect(() => {
         if (isSelected) {
@@ -67,12 +68,15 @@ export default function StaffingCard({ staffing, isSelected, onSelect }) {
                     {preferredSchedule?.length ? preferredSchedule.join(", ") : "Any"}
                 </div>
 
-                <div className="pt-2 border-t border-gray-200 text-sm text-muted">
-                    <div><strong>Coordinator:</strong> {coordName}</div>
-                    <div className="text-xs text-muted-foreground">
-                        {coordinator?.email} • {coordinator?.phone || "No phone"}
+                {/* Only show coordinator to superadmin */}
+                {!isAdmin && (
+                    <div className="pt-2 border-t border-gray-200 text-sm text-muted">
+                        <div><strong>Coordinator:</strong> {coordName}</div>
+                        <div className="text-xs text-muted-foreground">
+                            {coordinator?.email} • {coordinator?.phone || "No phone"}
+                        </div>
                     </div>
-                </div>
+                )}
             </CardContent>
         </Card>
     );

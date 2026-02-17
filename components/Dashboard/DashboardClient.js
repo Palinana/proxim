@@ -5,7 +5,7 @@ import DashboardStaffingMap from "../Map/DashboardStaffingMap";
 import DashboardStaffingPanel from "../Staffing/DashboardStaffingPanel";
 import MobileStaffingToggle from "@/components/Staffing/MobileStaffingToggle";
 
-export default function DashboardClient({ staffings }) {
+export default function DashboardClient({ staffings, role }) {
     const [selectedStaffingId, setSelectedStaffingId] = useState(null);
     const [open, setOpen] = useState(false);
 
@@ -22,6 +22,7 @@ export default function DashboardClient({ staffings }) {
                     staffings={staffings}
                     selectedStaffingId={selectedStaffingId}
                     onSelectStaffing={setSelectedStaffingId}
+                    role={role}
                 />
             </aside>
     

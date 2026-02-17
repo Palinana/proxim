@@ -2,8 +2,8 @@ import connectDB from "@/config/database";
 import Staffing from "@/models/Staffing";
 import User from "@/models/User";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/utils/authOptions";
-import StaffingList from "@/components/staffing/StaffingList";
+import { authOptions } from "../../../utils/authOptions";
+import StaffingList from "../../../components/Staffing/StaffingList";
 
 export default async function SuperAdminStaffingPage({ searchParams }) {
     await connectDB();

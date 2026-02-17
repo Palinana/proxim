@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MultiSelectPopover from "./MultiSelectPopover";
 import OutlineButton from "../Elements/OutlineGreenButton";
 
-export default function FilterBar({ coordinators, role, userId, mandateOptions }) {
+export default function FilterBar({ coordinators, role, userId, mandateOptions, zipOptions }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
@@ -25,9 +25,13 @@ export default function FilterBar({ coordinators, role, userId, mandateOptions }
       
     const setMultiParam = (key, values) => {
         const params = new URLSearchParams(searchParams);
-        if (!values.length) params.delete(key);
-        else params.set(key, values.join(","));
-      
+
+        const clean = Array.from(new Set(values))
+            .filter(Boolean);
+
+        if (!clean.length) params.delete(key);
+        else params.set(key, clean.join(","));
+
         router.push(`${pathname}?${params.toString()}`);
     };  
 
@@ -92,18 +96,7 @@ export default function FilterBar({ coordinators, role, userId, mandateOptions }
             {/* ZIP */}
             <MultiSelectPopover
                 label="ZIP"
-                options={[
-                    { label: "10301", value: "10301" },
-                    { label: "10302", value: "10302" },
-                    { label: "10303", value: "10303" },
-                    { label: "10305", value: "10305" },
-                    { label: "10306", value: "10306" },
-                    { label: "10307", value: "10307" },
-                    { label: "10308", value: "10308" },
-                    { label: "10309", value: "10309" },
-                    { label: "10310", value: "10310" },
-                    { label: "10312", value: "10312" },
-                ]}
+                options={zipOptions}
                 value={(searchParams.get("zip") || "").split(",").filter(Boolean)}
                 onChange={(vals) => setMultiParam("zip", vals)}
             />

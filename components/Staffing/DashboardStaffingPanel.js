@@ -1,7 +1,7 @@
 import StaffingCard from "./StaffingCard";
 import DashboardStaffingPanelHeader from "./DashboardStaffingPanelHeader";
 
-export default function DashboardStaffingPanel({ staffings, selectedStaffingId, onSelectStaffing }) {
+export default function DashboardStaffingPanel({ staffings, role, selectedStaffingId, onSelectStaffing }) {
     return (
         <div className="bg-surface h-full flex flex-col">
             <div className="sticky top-0 z-10 border-b border-default">
@@ -21,6 +21,7 @@ export default function DashboardStaffingPanel({ staffings, selectedStaffingId, 
                                 staffing={s}
                                 isSelected={s._id === selectedStaffingId}
                                 onSelect={() => onSelectStaffing(s._id)}
+                                role={role}
                             />
                         ))
                     )}
