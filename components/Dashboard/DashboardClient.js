@@ -15,7 +15,8 @@ export default function DashboardClient({ staffings, role }) {
     );
 
     return (
-        <div className="flex flex-1 h-full overflow-hidden bg-card">
+        // <div className="flex flex-1 h-full overflow-hidden bg-card">
+        <div className="flex h-[100dvh] overflow-hidden bg-card">
             {/* Desktop sidebar */}
             <aside className="hidden md:block w-[420px] lg:w-[480px] border-r border-default overflow-y-auto">
                 <DashboardStaffingPanel
